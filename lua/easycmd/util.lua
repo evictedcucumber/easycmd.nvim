@@ -3,17 +3,33 @@ local ui = require('easycmd.ui')
 
 local M = {}
 
+---@param path? string The path to check
+---@return integer|nil idx The index of the found path or nil
+local function path_exists(path)
+    path = path or vim.fn.getcwd()
+    for i, entry in ipairs(state.paths) do
+        if entry.path == path then
+            return i
+        end
+    end
+end
+
+M.__path_exists = function(path)
+    return path_exists(path)
+end
+
 ---@param idx integer The index of the command to insert or modify
 ---@param command string The command to put at the index
 M.change_command = function(idx, command)
-    for _, entry in ipairs(state.commands) do
+    local commands = M.get_commands_from_path()
+    for _, entry in ipairs(commands) do
         if entry.idx == idx then
             entry.command = command
             return
         end
     end
 
-    table.insert(state.commands, { idx = idx, command = command })
+    table.insert(commands, { idx = idx, command = command })
 end
 
 --- Run the given command
@@ -89,6 +105,12 @@ M.cmd_complete = function(arg_lead, cmd_line, cursor_pos)
         end
 
         return matches
+    elseif #args == 3 then
+        if args[2] == 'list' then
+            return vim.fn.glob(arg_lead .. '*', true, true)
+        else
+            return {}
+        end
     elseif #args == 4 then
         local suggestions = { 'float', 'tab', 'hsplit', 'vsplit' }
         local matches = {}
@@ -101,6 +123,19 @@ M.cmd_complete = function(arg_lead, cmd_line, cursor_pos)
         return matches
     else
         return {}
+    end
+end
+
+---@param path? string The path to get the commands from or nil
+---@return easycmd.Entry[] commands The commands related to the cwd
+M.get_commands_from_path = function(path)
+    path = path or vim.fn.getcwd()
+    local idx = path_exists(path)
+    if idx then
+        return state.paths[idx].commands
+    else
+        table.insert(state.paths, { path = path, commands = {} })
+        return state.paths[#state.paths].commands
     end
 end
 

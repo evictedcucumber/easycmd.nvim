@@ -23,17 +23,25 @@ vim.api.nvim_create_user_command('EasyCmd', function(opts)
 
     if #args == 2 then
         local mode = args[1]
-        local idx = tonumber(args[2])
+        local param = args[2]
 
-        if not mode or not idx then
+        if not mode or not param then
             usage()
             return
         end
 
         if mode == 'edit' then
-            easycmd.edit_command(idx)
+            local idx = tonumber(param)
+            if idx then
+                easycmd.edit_command(idx)
+            end
         elseif mode == 'run' then
-            easycmd.run_command(idx, 'float')
+            local idx = tonumber(param)
+            if idx then
+                easycmd.run_command(idx, 'float')
+            end
+        elseif mode == 'list' then
+            easycmd.list_commands(param)
         else
             vim.notify('Invalid mode `' .. mode .. '`', vim.log.levels.ERROR)
         end

@@ -74,7 +74,6 @@ The following is the default configuration. You do not need to copy this exactly
 
 ## Planned features
 - Interactive terminal window
-- Store commands per path similar to [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
 
 ## References
 
