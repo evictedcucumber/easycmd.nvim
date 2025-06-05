@@ -4,12 +4,10 @@ A basic easy interface for running commands.
 
 1. [Installation](#Installation)
 2. [Usage](#Usage)
-3. [References](#References)
+3. [Configuration](#Configuration)
+4. [Planned Features](#Planned Features)
+5. [References](#References)
 
-## Roadmap
-- [ ] Interactive terminal window
-- [ ] Allow for float, tab, split, etc
-- [ ] Store commands per path similar to [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
 
 ## Installation
 
@@ -26,9 +24,6 @@ return {
 
 #### Unstable
 
-> [!WARNING]
-> Currently no avaliable please use the [stable](#Stable) branch.
-
 ```lua
 return {
     'evictedcucumber/easycmd.nvim',
@@ -38,6 +33,8 @@ return {
 ```
 
 ## Usage
+
+All terms can be closed by pressing the default bind `q` when inside the window or setting a custom key in the `window.close_key`.
 
 ### Edit Command
 
@@ -62,6 +59,22 @@ To list all current commands and their indices run the following.
 ```
 :EasyCmd list
 ```
+
+## Configuration
+
+The following is the default configuration. You do not need to copy this exactly for the plugin to work.
+
+```lua
+{
+    window = {
+        close_key = 'q',
+    },
+}
+```
+
+## Planned features
+- Interactive terminal window
+- Store commands per path similar to [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
 
 ## References
 

@@ -1,14 +1,14 @@
 local M = {}
 
----@class easycmd.win.Window
+---@class easycmd.ui.UIElement
 ---@field buf integer The buffer id
 ---@field win integer The win id
 
 --- Create a floating window with buffer and return the win and buf numbers.
 ---
 ---@param win_config? vim.api.keyset.win_config The window configuration
----@return easycmd.win.Window float The buf and win numbers of the created window
-M.create_floating_window = function(win_config)
+---@return easycmd.ui.UIElement float The buf and win numbers of the created window
+M.create_new_float = function(win_config)
     win_config = win_config or {}
 
     win_config.width = win_config.width or math.floor(vim.o.columns * 0.9)
@@ -23,11 +23,33 @@ M.create_floating_window = function(win_config)
     local buf = vim.api.nvim_create_buf(false, true)
     local win = vim.api.nvim_open_win(buf, true, win_config)
 
-    vim.keymap.set('n', 'q', function()
-        vim.api.nvim_win_close(win, true)
-        vim.bo[buf].buflisted = false
-        vim.api.nvim_buf_delete(buf, { force = true, unload = true })
-    end, { buffer = buf })
+    return { buf = buf, win = win }
+end
+
+--- Create a new tab and return its buffer number
+---@return easycmd.ui.UIElement tab The tab info of the new buffer and window
+M.create_new_tab = function()
+    vim.cmd('tabnew')
+
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
+
+    return { buf = buf, win = win }
+end
+
+---@param type 'hsplit'|'vsplit' The type of split to create
+---@return easycmd.ui.UIElement
+M.create_new_split = function(type)
+    if type == 'hsplit' then
+        vim.cmd('split')
+    elseif type == 'vsplit' then
+        vim.cmd('vsplit')
+    end
+
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_create_buf(true, true)
+
+    vim.api.nvim_win_set_buf(win, buf)
 
     return { buf = buf, win = win }
 end

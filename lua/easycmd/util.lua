@@ -1,4 +1,5 @@
 local state = require('easycmd.state')
+local ui = require('easycmd.ui')
 
 local M = {}
 
@@ -18,10 +19,36 @@ end
 --- Run the given command
 ---
 ---@param command string The command to run
+---@param win_type 'float'|'tab'|'hsplit'|'vsplit' The type of window to create the terminal in
 ---@return nil
-M.run_command = function(command)
-    local float = require('easycmd.win').create_floating_window()
-    local term = vim.api.nvim_open_term(float.buf, {})
+M.run_command = function(command, win_type)
+    ---@type easycmd.ui.UIElement
+    local out
+    if win_type == 'float' then
+        out = ui.create_new_float()
+    elseif win_type == 'tab' then
+        out = ui.create_new_tab()
+    elseif win_type == 'vsplit' or win_type == 'hsplit' then
+        ---@cast win_type 'vsplit'|'hsplit'
+        out = ui.create_new_split(win_type)
+    else
+        vim.notify('invaild win_type `' .. win_type .. '`', vim.log.levels.ERROR)
+        return
+    end
+
+    local term = vim.api.nvim_open_term(out.buf, {})
+
+    local close_key = (state.config.window and state.config.window.close_key) or 'q'
+    vim.keymap.set('n', close_key, function()
+        vim.api.nvim_win_close(out.win, true)
+        vim.bo[out.buf].buflisted = false
+        vim.api.nvim_buf_delete(out.buf, { force = true, unload = true })
+    end, { buffer = out.buf })
+
+    if not term then
+        vim.notify('unable to create term session', vim.log.levels.ERROR)
+        return
+    end
 
     local function on_output(_, data, _)
         if not data then
@@ -38,7 +65,7 @@ M.run_command = function(command)
         on_stdout = on_output,
         on_stderr = on_output,
         on_exit = function()
-            vim.api.nvim_chan_send(term, '\r\n[Press q to close]\r\n')
+            vim.api.nvim_chan_send(term, '\r\n[Press ' .. close_key .. ' to close]\r\n')
         end,
     })
 
@@ -54,6 +81,16 @@ M.cmd_complete = function(arg_lead, cmd_line, cursor_pos)
 
     if #args == 2 then
         local suggestions = { 'edit', 'run', 'list' }
+        local matches = {}
+        for _, s in ipairs(suggestions) do
+            if s:sub(1, #arg_lead) then
+                table.insert(matches, s)
+            end
+        end
+
+        return matches
+    elseif #args == 4 then
+        local suggestions = { 'float', 'tab', 'hsplit', 'vsplit' }
         local matches = {}
         for _, s in ipairs(suggestions) do
             if s:sub(1, #arg_lead) then

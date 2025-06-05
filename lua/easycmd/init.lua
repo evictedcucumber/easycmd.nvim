@@ -1,11 +1,16 @@
-local _util = require('easycmd.util')
+local util = require('easycmd.util')
 local state = require('easycmd.state')
 
 local M = {}
 
+M.setup = function(opts)
+    opts = opts or {}
+    state.config = opts
+end
+
 --- Edit the command at the given index
 ---
---- Will run the command on accepting the edit
+--- Will run the command on accepting the edit. Will also always run the command a floating window
 ---
 ---@param idx number The index of the command to edit
 ---@return nil
@@ -22,8 +27,8 @@ M.edit_command = function(idx)
             if not input then
                 return
             end
-            _util.run_command(input)
-            _util.change_command(idx, input)
+            util.run_command(input, 'float')
+            util.change_command(idx, input)
         end
     )
 end
@@ -31,11 +36,12 @@ end
 --- Run the command at the given index
 ---
 ---@param idx number The index of the command to run
+---@param win_type 'float'|'tab' The type of window to run the command in
 ---@return nil
-M.run_command = function(idx)
+M.run_command = function(idx, win_type)
     for _, entry in ipairs(state.commands) do
         if entry.idx == idx then
-            _util.run_command(entry.command)
+            util.run_command(entry.command, win_type)
             return
         end
     end
