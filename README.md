@@ -2,13 +2,36 @@
 
 A basic easy interface for running commands.
 
+1. [Installation](#Installation)
+2. [Usage](#Usage)
+3. [References](#References)
+
+## Roadmap
+- [ ] Interactive terminal window
+- [ ] Allow for float, tab, split, etc
+- [ ] Store commands per path similar to [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
+
 ## Installation
 
 ### Lazy
 
+#### Stable
+
 ```lua
 return {
     'evictedcucumber/easycmd.nvim',
+    cmd = 'EasyCmd'
+}
+```
+
+#### Unstable
+
+> [!warn] Currently no avaliable please use the [stable](####Stable) branch.
+
+```lua
+return {
+    'evictedcucumber/easycmd.nvim',
+    branch = 'unstable',
     cmd = 'EasyCmd'
 }
 ```
