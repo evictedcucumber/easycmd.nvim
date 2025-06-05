@@ -1,0 +1,3 @@
+---@class easycmd.Entry
+---@field idx integer The index of the command
+---@field command string The command
