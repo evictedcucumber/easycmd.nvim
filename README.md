@@ -26,7 +26,8 @@ return {
 
 #### Unstable
 
-> [!warn] Currently no avaliable please use the [stable](####Stable) branch.
+> [!WARNING]
+> Currently no avaliable please use the [stable](#Stable) branch.
 
 ```lua
 return {
