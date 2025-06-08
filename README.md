@@ -74,6 +74,7 @@ The following is the default configuration. You do not need to copy this exactly
 
 ## Planned features
 - Interactive terminal window
+- Preserve cmd output to view after closing window
 
 ## References
 

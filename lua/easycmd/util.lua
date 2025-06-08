@@ -52,38 +52,26 @@ M.run_command = function(command, win_type)
         return
     end
 
-    local term = vim.api.nvim_open_term(out.buf, {})
+    vim.bo[out.buf].modifiable = false
+    vim.bo[out.buf].buflisted = false
 
     local close_key = (state.config.window and state.config.window.close_key) or 'q'
     vim.keymap.set('n', close_key, function()
         vim.api.nvim_win_close(out.win, true)
-        vim.bo[out.buf].buflisted = false
         vim.api.nvim_buf_delete(out.buf, { force = true, unload = true })
     end, { buffer = out.buf })
 
-    if not term then
-        vim.notify('unable to create term session', vim.log.levels.ERROR)
-        return
-    end
+    vim.api.nvim_set_current_win(out.win)
 
-    local function on_output(_, data, _)
-        if not data then
-            return
-        end
-
-        for _, line in ipairs(data) do
-            vim.api.nvim_chan_send(term, line .. '\r\n')
-        end
-    end
-
-    vim.fn.jobstart(command, {
-        stdout_buffered = true,
-        on_stdout = on_output,
-        on_stderr = on_output,
-        on_exit = function()
-            vim.api.nvim_chan_send(term, '\r\n[Press ' .. close_key .. ' to close]\r\n')
-        end,
-    })
+    vim.api.nvim_buf_call(out.buf, function()
+        vim.fn.jobstart({
+            'bash',
+            '-c',
+            command,
+        }, {
+            term = true,
+        })
+    end)
 
     vim.cmd('stopinsert')
 end
