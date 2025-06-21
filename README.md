@@ -2,12 +2,11 @@
 
 A basic easy interface for running commands.
 
-1. [Installation](#Installation)
-2. [Usage](#Usage)
-3. [Configuration](#Configuration)
-4. [Planned Features](#Planned Features)
-5. [References](#References)
-
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [Configuration](#configuration)
+4. [Planned Features](#planned-features)
+5. [References](#references)
 
 ## Installation
 
@@ -46,10 +45,36 @@ To edit a command run the below command replacing `<index>` with a number such a
 
 ### Run Command
 
-To run a command again provide a vaild index at `<index>`.
+To run a command again provide a vaild index at `<index>`. Will default to running in a floating window.
 
 ```
 :EasyCmd run <index>
+```
+
+Can change different window modes.
+
+#### Floating
+
+```
+:EasyCmd run <index> float
+```
+
+#### Tab
+
+```
+:EasyCmd run <index> tab
+```
+
+#### Horizontal Split
+
+```
+:EasyCmd run <index> hsplit
+```
+
+#### Vertical Split
+
+```
+:EasyCmd run <index> vsplit
 ```
 
 ### List Command
@@ -63,11 +88,24 @@ To list all current commands and their indices run the following.
 ## Configuration
 
 The following is the default configuration. You do not need to copy this exactly for the plugin to work.
+For detailed configuration options see [Configuration](./docs/Configuration.md)
 
 ```lua
-{
+---@type easycmd.Config
+opts = {
     window = {
         close_key = 'q',
+        default_type = 'float',
+    },
+    run = {
+        window = {
+            default_type = 'float',
+        },
+    },
+    edit = {
+        window = {
+            default_type = 'float',
+        },
     },
 }
 ```

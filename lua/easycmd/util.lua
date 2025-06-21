@@ -35,8 +35,7 @@ end
 --- Run the given command
 ---
 ---@param command string The command to run
----@param win_type 'float'|'tab'|'hsplit'|'vsplit' The type of window to create the terminal in
----@return nil
+---@param win_type easycmd.win_type The type of window to create the terminal in
 M.run_command = function(command, win_type)
     ---@type easycmd.ui.UIElement
     local out
@@ -48,14 +47,18 @@ M.run_command = function(command, win_type)
         ---@cast win_type 'vsplit'|'hsplit'
         out = ui.create_new_split(win_type)
     else
-        vim.notify('invaild win_type `' .. win_type .. '`', vim.log.levels.ERROR)
+        vim.notify(
+            'invaild win_type `' .. win_type .. '`',
+            vim.log.levels.ERROR
+        )
         return
     end
 
     vim.bo[out.buf].modifiable = false
     vim.bo[out.buf].buflisted = false
 
-    local close_key = (state.config.window and state.config.window.close_key) or 'q'
+    local close_key = (state.config.window and state.config.window.close_key)
+        or 'q'
     vim.keymap.set('n', close_key, function()
         vim.api.nvim_win_close(out.win, true)
         vim.api.nvim_buf_delete(out.buf, { force = true, unload = true })
