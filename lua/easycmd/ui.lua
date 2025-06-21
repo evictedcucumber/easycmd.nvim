@@ -13,8 +13,10 @@ M.create_new_float = function(win_config)
 
     win_config.width = win_config.width or math.floor(vim.o.columns * 0.9)
     win_config.height = win_config.height or math.floor(vim.o.lines * 0.9)
-    win_config.row = win_config.row or math.floor((vim.o.lines - win_config.height) / 2)
-    win_config.col = win_config.col or math.floor((vim.o.columns - win_config.width) / 2)
+    win_config.row = win_config.row
+        or math.floor((vim.o.lines - win_config.height) / 2)
+    win_config.col = win_config.col
+        or math.floor((vim.o.columns - win_config.width) / 2)
 
     win_config.relative = win_config.relative or 'editor'
     win_config.style = win_config.style or 'minimal'

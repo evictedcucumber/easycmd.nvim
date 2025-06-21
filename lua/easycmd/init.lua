@@ -11,7 +11,10 @@ M.setup = function(opts)
     state.paths = json.read()
 
     vim.api.nvim_create_autocmd('VimLeavePre', {
-        group = vim.api.nvim_create_augroup('easycmd_on_exit', { clear = true }),
+        group = vim.api.nvim_create_augroup(
+            'easycmd_on_exit',
+            { clear = true }
+        ),
         once = true,
         callback = function()
             json.write(state.paths)
@@ -40,7 +43,14 @@ M.edit_command = function(idx)
             if not input then
                 return
             end
-            util.run_command(input, 'float')
+            local win_type = (
+                    state.config.window
+                    and state.config.window.default_type
+                )
+                or
+                (state.config.edit and state.config.edit.window and state.config.edit.window.default_type)
+                or 'float'
+            util.run_command(input, win_type)
             util.change_command(idx, input)
         end
     )
@@ -49,9 +59,15 @@ end
 --- Run the command at the given index
 ---
 ---@param idx number The index of the command to run
----@param win_type 'float'|'tab' The type of window to run the command in
+---@param win_type easycmd.win_type The type of window to run the command in
 ---@return nil
 M.run_command = function(idx, win_type)
+    win_type = win_type
+        or (state.config.window and state.config.window.default_type)
+        or
+        (state.config.run and state.config.run.window and state.config.run.window.default_type)
+        or 'float'
+
     local commands = util.get_commands_from_path()
 
     for _, entry in ipairs(commands) do

@@ -21,7 +21,10 @@ M.write = function(commands)
     local lines = vim.fn.split(json, '\n')
     local write_ok, _ = pcall(vim.fn.writefile, lines, json_path)
     if not write_ok then
-        vim.notify('Unable to write commands to json file', vim.log.levels.ERROR)
+        vim.notify(
+            'Unable to write commands to json file',
+            vim.log.levels.ERROR
+        )
         return
     end
 end

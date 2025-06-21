@@ -2,7 +2,10 @@ local easycmd = require('easycmd')
 local util = require('easycmd.util')
 
 local usage = function()
-    vim.notify('Usage: :EasyCmd <edit|run|list> [integer] [float|tab]', vim.log.levels.ERROR)
+    vim.notify(
+        'Usage: :EasyCmd <edit|run|list> [integer] [float|tab]',
+        vim.log.levels.ERROR
+    )
 end
 
 vim.api.nvim_create_user_command('EasyCmd', function(opts)
@@ -61,7 +64,11 @@ vim.api.nvim_create_user_command('EasyCmd', function(opts)
             easycmd.run_command(idx, win_type)
         else
             vim.notify(
-                'Invaild mode `' .. mode .. '` that accepts win_type `' .. win_type .. '`',
+                'Invaild mode `'
+                .. mode
+                .. '` that accepts win_type `'
+                .. win_type
+                .. '`',
                 vim.log.levels.ERROR
             )
             return
