@@ -27,7 +27,7 @@ return {
 return {
     'evictedcucumber/easycmd.nvim',
     branch = 'unstable',
-    cmd = 'EasyCmd'
+    cmd = {'EasyCmdRun', 'EasyCmdEdit'},
 }
 ```
 
@@ -37,18 +37,18 @@ All terms can be closed by pressing the default bind `q` when inside the window 
 
 ### Edit Command
 
-To edit a command run the below command replacing `<index>` with a number such as `1`.
+To edit a command run the below command replacing `<reg>` with a number such as `1`.
 
 ```
-:EasyCmd edit <index>
+:EasyCmdEdit <reg>
 ```
 
 ### Run Command
 
-To run a command again provide a vaild index at `<index>`. Will default to running in a floating window.
+To run a command again provide a vaild index at `<reg>`. Will default to running in a floating window.
 
 ```
-:EasyCmd run <index>
+:EasyCmdRun <reg> ['tab'|'float'|'vsplit'|'split']
 ```
 
 Can change different window modes.
@@ -56,33 +56,25 @@ Can change different window modes.
 #### Floating
 
 ```
-:EasyCmd run <index> float
+:EasyCmdRun <reg> float
 ```
 
 #### Tab
 
 ```
-:EasyCmd run <index> tab
+:EasyCmdRun <reg> tab
 ```
 
 #### Horizontal Split
 
 ```
-:EasyCmd run <index> hsplit
+:EasyCmdRun <reg> hsplit
 ```
 
 #### Vertical Split
 
 ```
-:EasyCmd run <index> vsplit
-```
-
-### List Command
-
-To list all current commands and their indices run the following.
-
-```
-:EasyCmd list
+:EasyCmdRun <reg> vsplit
 ```
 
 ## Configuration
@@ -113,11 +105,12 @@ opts = {
 ## Planned features
 - Interactive terminal window
 - Preserve cmd output to view after closing window
+- Temporary run commands, do not save to disk at end of session
 
 ## References
 
-Inspiration from [@ej-shafran](https://github.com/ej-shafran)'s [compile-mode.nvim](https://github.com/ej-shafran/compile-mode.nvim) plugin.
+- Inspiration from [@ej-shafran](https://github.com/ej-shafran)'s [compile-mode.nvim](https://github.com/ej-shafran/compile-mode.nvim) plugin.
 
-How to write a plugin from scratch from [@tjdevries](https://github.com/tjdevries)'s:
-- YouTube video: [https://www.youtube.com/watch?v=VGid4aN25iI](https://www.youtube.com/watch?v=VGid4aN25iI)
-- Github repo: [https://github.com/tjdevries/present.nvim](https://github.com/tjdevries/present.nvim/tree/master)
+- How to write a plugin from scratch from [@tjdevries](https://github.com/tjdevries)'s:
+    - YouTube video: [https://www.youtube.com/watch?v=VGid4aN25iI](https://www.youtube.com/watch?v=VGid4aN25iI)
+    - Github repo: [https://github.com/tjdevries/present.nvim](https://github.com/tjdevries/present.nvim/tree/master)

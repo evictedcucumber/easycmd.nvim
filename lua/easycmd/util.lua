@@ -79,30 +79,18 @@ M.run_command = function(command, win_type)
     vim.cmd('stopinsert')
 end
 
+---@class easycmd.CompletionFuncs
+---@field run fun(arg_lead: string, cmd_line: string, cursor_pos: integer): string[] The completeion function for running commands.
+M.completionfuncs = {}
+
 ---@param arg_lead string The leading portion of the argument currently being completed on
 ---@param cmd_line string The entire command line
 ---@param cursor_pos integer The cursor position in it
 ---@return string[] matches The completion options
-M.cmd_complete = function(arg_lead, cmd_line, cursor_pos)
+M.completionfuncs.run = function(arg_lead, cmd_line, cursor_pos)
     local args = vim.split(cmd_line:sub(1, cursor_pos), '%s+')
 
     if #args == 2 then
-        local suggestions = { 'edit', 'run', 'list' }
-        local matches = {}
-        for _, s in ipairs(suggestions) do
-            if s:sub(1, #arg_lead) then
-                table.insert(matches, s)
-            end
-        end
-
-        return matches
-    elseif #args == 3 then
-        if args[2] == 'list' then
-            return vim.fn.glob(arg_lead .. '*', true, true)
-        else
-            return {}
-        end
-    elseif #args == 4 then
         local suggestions = { 'float', 'tab', 'hsplit', 'vsplit' }
         local matches = {}
         for _, s in ipairs(suggestions) do
@@ -112,9 +100,9 @@ M.cmd_complete = function(arg_lead, cmd_line, cursor_pos)
         end
 
         return matches
-    else
-        return {}
     end
+
+    return {}
 end
 
 ---@param path? string The path to get the commands from or nil
